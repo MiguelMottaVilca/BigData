@@ -11,7 +11,8 @@ def parse_point(line):
     return (np.array(values[:-1]), values[-1])
 
 # Cargar puntos de datos desde un archivo y almacenarlos en caché
-points = spark.read.text("s3://ruta_a_tu_archivo").rdd.map(lambda r: parse_point(r[0])).cache()
+# points = spark.read.text("s3://ruta_a_tu_archivo").rdd.map(lambda r: parse_point(r[0])).cache()
+points = spark.read.text("hdfs://ip-172-31-92-76.ec2.internal:8020/user/hadoop/logistic_data.txt").rdd.map(lambda r: parse_point(r[0])).cache()
 
 # Inicializar el vector w aleatorio
 D = len(points.first()[0])  # Dimensión

@@ -4,7 +4,8 @@ from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName("TextSearch").getOrCreate()
 
 # Cargar archivo desde HDFS o S3
-file = spark.read.text("s3://ruta_a_tu_archivo").rdd.map(lambda r: r[0])
+# file = spark.read.text("s3://ruta_a_tu_archivo").rdd.map(lambda r: r[0])
+file = spark.read.text("hdfs://ip-172-31-92-76.ec2.internal:8020/user/hadoop/log_data.txt").rdd.map(lambda r: r[0])
 
 # Filtrar líneas que contienen "ERROR"
 errors = file.filter(lambda line: "ERROR" in line)
