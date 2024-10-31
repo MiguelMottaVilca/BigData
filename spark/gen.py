@@ -1,15 +1,12 @@
 import random
 
 # ejercicio 1
-D = 10  # Dimensión del espacio de características
-n_points = 1000  # Número de puntos de datos
-
-with open("logistic_data.txt", "w") as f:
-    for _ in range(n_points):
-        x = [random.uniform(-1, 1) for _ in range(D)]  # Genera valores aleatorios entre -1 y 1
-        y = random.choice([-1, 1])  # Etiqueta aleatoria
-        line = ",".join(map(str, x)) + f",{y}\n"  # Formato: x1,x2,...,xD,y
-        f.write(line)
+with open("log_data.txt", "w") as f:
+    for i in range(1000):
+        if random.random() < 0.1:
+            f.write("ERROR: Ocurrió un error en la operación.\n")
+        else:
+            f.write("INFO: Operación completada exitosamente.\n")
 
 
 # ejercicio 2
