@@ -8,6 +8,7 @@ CREATE TABLE temp_logs (line STRING);
 
 -- Cargar datos desde el archivo
 LOAD DATA INPATH '/ruta/del/archivo' INTO TABLE temp_logs;
+---/user/hadoop/files/wordcount_log.txt
 
 -- Contar la frecuencia de cada palabra
 SELECT word, COUNT(1) as count
@@ -23,15 +24,15 @@ ORDER BY count DESC;
 ``` 
 
 -- Crear una tabla para almacenar logs de usuarios
-CREATE TABLE user_logs (user STRING, time STRING, query STRING);
+CREATE TABLE user_logs (username STRING, log_time STRING, query_text STRING);
 
 -- Cargar datos en la tabla desde el archivo log
-LOAD DATA INPATH '/ruta/del/archivo' INTO TABLE user_logs;
+LOAD DATA INPATH '/user/hadoop/files/user_logs.txt' INTO TABLE user_logs;
 
 -- Contar el número de entradas en el log por usuario
-SELECT user, COUNT(*) as log_count
+SELECT username, COUNT(*) as log_count
 FROM user_logs
-GROUP BY user
+GROUP BY username
 ORDER BY log_count DESC;
 ``` 
 
@@ -39,29 +40,29 @@ ORDER BY log_count DESC;
 
 ```
 -- Calcular el promedio de visitas por usuario
-SELECT user, AVG(visits) as average_visits
+SELECT username, AVG(visits) as average_visits
 FROM (
-    SELECT user, COUNT(*) as visits
+    SELECT username, COUNT(*) as visits
     FROM user_logs
-    GROUP BY user
+    GROUP BY username
 ) user_visits
-GROUP BY user
+GROUP BY username
 ORDER BY average_visits DESC;
 ``` 
 
 4. Identificar cuáles usuarios visitan “Página mejores rankeadas” en promedio
 ``` 
 -- Crear una tabla para almacenar información de páginas y su rankeo
-CREATE TABLE page_rank (user STRING, page STRING, rank FLOAT);
+CREATE TABLE page_rank (username STRING, page STRING, rank FLOAT);
 
 -- Cargar datos en la tabla desde el archivo de ranking
-LOAD DATA INPATH '/ruta/del/archivo_ranking' INTO TABLE page_rank;
+LOAD DATA INPATH '/user/hadoop/files/page_rank.txt' INTO TABLE page_rank;
 
 -- Identificar usuarios que visitan páginas con un rank mayor a 0.5
-SELECT user, AVG(rank) as avg_rank
+SELECT username, AVG(rank) as avg_rank
 FROM page_rank
 WHERE rank > 0.5
-GROUP BY user
+GROUP BY username
 ORDER BY avg_rank DESC;
 ``` 
 
@@ -128,4 +129,14 @@ print("Archivo 'page_rank.txt' generado.")
 hdfs dfs -put wordcount_log.txt /ruta/en/hdfs/
 hdfs dfs -put user_logs.txt /ruta/en/hdfs/
 hdfs dfs -put page_rank.txt /ruta/en/hdfs/
+``` 
+
+``` 
+
+hdfs dfs -mkdir -p /user/hadoop/files/
+chmod 755 /home/ec2-user/files/wordcount_log.txt
+hadoop fs -put /home/ec2-user/files/user_logs.txt /user/hadoop/files/
+hadoop fs -ls /user/hadoop/files/
+
+sudo chown hadoop:hadoop archivo
 ``` 
