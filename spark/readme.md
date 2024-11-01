@@ -1,3 +1,4 @@
+# Spark
 
 ## path
 file_rdd = spark.read.text("hdfs:///user/hadoop/log_data.txt").rdd
@@ -12,7 +13,6 @@ hdfs dfs -put ratings_data.txt /user/hadoop/
 ## ls hdfs
 ```
 hdfs dfs -ls /user/hadoop/
-
 ```
 
 ## requerimientos
